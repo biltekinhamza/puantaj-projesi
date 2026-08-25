@@ -1,0 +1,86 @@
+{% extends "base.html" %}
+{% load static %}
+{% block title %}Puantaj | {{ sirket.kisa_ad }}{% endblock %}
+{% block extra_css %}<link rel="stylesheet" href="{% static 'css/puantaj.css' %}">{% endblock %}
+{% block content %}
+<div class="puantaj-wrapper">
+  <div class="page-header">
+    <div><h1 class="puantaj-title">Aylık Puantaj</h1><p class="muted">Personelin günlük çalışma durumlarını kaydedin.</p></div>
+  </div>
+  <p class="puantaj-help"><strong>Kodlar:</strong> {% for kod, veri in PUANTAJ_KODLARI.items %}<span class="badge kod-{{ kod }}">{{ kod }} = {{ veri.label }}</span>{% if not forloop.last %} {% endif %}{% endfor %}</p>
+
+  <form method="get" class="filters puantaj-filter" id="filterForm">
+    <div class="field"><label for="puantaj-ay">Ay</label><select id="puantaj-ay" name="ay">{% for i in aylar %}<option value="{{ i.value }}" {% if i.value == ay %}selected{% endif %}>{{ i.label }}</option>{% endfor %}</select></div>
+    <div class="field"><label for="puantaj-yil">Yıl</label><select id="puantaj-yil" name="yil">{% for y in yillar %}<option value="{{ y }}" {% if y == yil %}selected{% endif %}>{{ y }}</option>{% endfor %}</select></div>
+    <div class="field"><button type="submit">Dönemi Getir</button></div>
+  </form>
+
+  <form method="post" id="puantaj-form">
+    {% csrf_token %}
+    <input type="hidden" name="ay" value="{{ ay }}">
+    <input type="hidden" name="yil" value="{{ yil }}">
+    <div class="puantaj-actions"><span class="muted">Değişiklikleri kaybetmemek için dönem değiştirmeden önce kaydedin.</span><button type="submit">Puantajı Kaydet</button></div>
+    <div class="mobile-day-nav" aria-label="Gün seçimi">
+      <button class="btn light day-step" type="button" data-direction="-1" aria-label="Önceki gün">‹</button>
+      <div><label for="mobile-day-select">İşlem Yapılacak Gün</label><select id="mobile-day-select" data-initial-day="{{ secili_gun }}">{% for gun in gunler %}<option value="{{ gun }}">{{ gun }}. Gün{% if gun in pazar_gunleri %} (Pazar){% endif %}</option>{% endfor %}</select></div>
+      <button class="btn light day-step" type="button" data-direction="1" aria-label="Sonraki gün">›</button>
+    </div>
+    <div class="puantaj-scroll" tabindex="0" role="region" aria-label="Aylık personel puantaj tablosu">
+      <table class="puantaj-table">
+        <thead><tr><th class="puantaj-personel" scope="col">Personel</th>{% for gun in gunler %}<th scope="col" data-day="{{ gun }}"{% if gun in pazar_gunleri %} class="pazar-gunu"{% endif %}>{{ gun }}</th>{% endfor %}<th class="puantaj-total" scope="col">Toplam</th></tr></thead>
+        <tbody>
+          {% for row in rows %}
+          <tr>
+            <th class="puantaj-personel" scope="row" title="{{ row.personel.ad_soyad }}">{{ row.personel.ad_soyad }}</th>
+            {% for cell in row.day_cells %}
+            <td data-day="{{ cell.gun }}"{% if cell.is_pazar %} class="pazar-gunu"{% endif %}>
+              {% if cell.editable %}
+              <select name="gun_{{ row.personel.id }}_{{ cell.gun }}" class="puantaj-select{% if cell.kod %} kod-{{ cell.kod }}{% endif %}" aria-label="{{ row.personel.ad_soyad }}, {{ cell.gun }}. gün puantaj kodu" onchange="this.className='puantaj-select' + (this.value ? ' kod-' + this.value : '');">
+                <option value="" {% if not cell.kod %}selected{% endif %}>-</option>{% for kod, veri in PUANTAJ_KODLARI.items %}<option value="{{ kod }}" {% if kod == cell.kod %}selected{% endif %}>{{ kod }}</option>{% endfor %}
+              </select>
+              {% else %}
+              <select class="puantaj-select pasif" aria-label="{{ row.personel.ad_soyad }}, {{ cell.gun }}. gün düzenlenemez" disabled><option selected>{{ cell.kod|default:"-" }}</option></select>
+              {% endif %}
+            </td>
+            {% endfor %}
+            <td class="puantaj-total"><strong>{{ row.toplam|floatformat:"-2" }}</strong></td>
+          </tr>
+          {% empty %}<tr><td colspan="35">Bu dönemde gösterilecek personel bulunamadı.</td></tr>{% endfor %}
+        </tbody>
+      </table>
+    </div>
+  </form>
+</div>
+{% endblock %}
+{% block extra_js %}
+<script>
+(function () {
+  var media = window.matchMedia('(max-width: 700px)');
+  var select = document.getElementById('mobile-day-select');
+  var dayCells = document.querySelectorAll('.puantaj-table [data-day]');
+  var scroll = document.querySelector('.puantaj-scroll');
+  if (!select) return;
+
+  function showDay(day) {
+    select.value = String(day);
+    dayCells.forEach(function (cell) {
+      cell.hidden = media.matches && cell.dataset.day !== String(day);
+    });
+    if (media.matches) {
+      scroll.scrollLeft = 0;
+      scroll.scrollTop = 0;
+    }
+  }
+
+  select.addEventListener('change', function () { showDay(Number(select.value)); });
+  document.querySelectorAll('.day-step').forEach(function (button) {
+    button.addEventListener('click', function () {
+      var next = Number(select.value) + Number(button.dataset.direction);
+      if (next >= 1 && next <= select.options.length) showDay(next);
+    });
+  });
+  media.addEventListener('change', function () { showDay(Number(select.value)); });
+  showDay(Number(select.dataset.initialDay || 1));
+})();
+</script>
+{% endblock %}

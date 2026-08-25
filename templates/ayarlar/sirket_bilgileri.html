@@ -1,0 +1,12 @@
+{% extends "base.html" %}
+{% block title %}Şirket Bilgileri | {{ sirket.kisa_ad }}{% endblock %}
+{% block content %}
+<div class="page-header"><div><h1>Şirket Bilgileri</h1><p class="muted">Program, rapor ve personel evraklarında kullanılacak kurumsal bilgileri yönetin.</p></div></div>
+<div class="card">
+  <form method="post">
+    {% csrf_token %}
+    <div class="grid">{% for field in form %}<div{% if field.name == 'adres' %} class="form-wide"{% endif %}>{{ field.label_tag }}{{ field }}{{ field.errors }}</div>{% endfor %}</div>
+    <div class="actions"><button type="submit">Bilgileri Kaydet</button></div>
+  </form>
+</div>
+{% endblock %}

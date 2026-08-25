@@ -1,0 +1,190 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+<meta charset="UTF-8">
+<title>BELİRLİ SÜRELİ İŞ SÖZLEŞMESİ</title>
+
+<style>
+@page {
+    size: A4;
+    margin: 2cm;
+}
+
+body {
+    font-family: "Times New Roman", serif;
+    font-size: 10pt;
+    line-height: 1.25;
+}
+
+h1 {
+    text-align: center;
+    font-size: 15pt;
+    margin: 0 0 18px 0;
+}
+
+.section-title {
+    font-weight: bold;
+    margin: 8px 0 4px 0;
+    page-break-after: avoid;
+}
+
+.table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-bottom: 10px;
+}
+
+.table td {
+    padding: 2px 0;
+    vertical-align: top;
+}
+
+.label {
+    width: 35%;
+    font-weight: bold;
+}
+
+p {
+    margin: 3px 0;
+    text-align: justify;
+    page-break-inside: avoid;
+}
+
+.signature {
+    margin-top: 100px;
+    width: 35%;
+    border-collapse: collapse;
+}
+
+.signature td {
+    width: 50%;
+    text-align: center;
+    padding-top: 30px;
+}
+</style>
+</head>
+
+<body>
+
+<h1>BELİRLİ SÜRELİ İŞ SÖZLEŞMESİ</h1>
+
+<div class="section-title">İŞVERENİN</div>
+<table class="table">
+  <tr><td class="label">Adı Ünvanı</td><td>: {{ isveren.unvan }}</td></tr>
+  <tr><td class="label">Adresi</td><td>: {{ isveren.adres }}</td></tr>
+  <tr><td class="label">SGK İşyeri Sicil Nosu</td><td>: {{ isveren.sgk_sicil_no }}</td></tr>
+</table>
+
+<div class="section-title">PERSONELİN</div>
+<table class="table">
+  <tr><td class="label">Adı Soyadı</td><td>: {{ personel.ad_soyad }}</td></tr>
+  <tr><td class="label">SGK Sicil (T.C. Kimlik) No</td><td>: {{ personel.tc_kimlik_no }}</td></tr>
+  <tr><td class="label">Doğum Yeri ve Yılı</td><td>: {{ personel.dogum_tarihi }}</td></tr>
+  <tr><td class="label">İkametgah Adresi</td><td>: {{ personel.adres }}</td></tr>
+  <tr><td class="label">Ev ve Cep Tel</td><td>: {{ personel.telefon }}</td></tr>
+</table>
+
+<div class="section-title">SÖZLEŞMENİN</div>
+<table class="table">
+  <tr>
+    <td class="label">Başlangıç-Bitiş Tarihi</td>
+    <td>:{{ sozlesme.baslangic }} ve {{ sozlesme.bitis }} Tarihleri arasıdır.
+  </tr>
+  <tr><td class="label">Sözleşmenin Süresi</td><td>: Belirli Sürelidir</td></tr>
+  <tr><td class="label">Çalışma Ücreti</td><td>: -</td></tr>
+  <tr><td class="label">Yapılacak İşin Konusu</td><td>: {{ sozlesme.isin_adi }}</td></tr>
+  <tr><td class="label">Deneme Süresi</td><td>: 2 Aydır</td></tr>
+</table>
+
+<p>Sözleşmede {{ isveren.unvan }}</td> yerine İşveren, “{{ personel.ad_soyad }}” yerine de Personel deyimi karşılık olarak kullanılmıştır.</p>
+
+<p><strong>MADDE 1) PERSONELİN SORUMLULUKLARI:</strong></p>
+
+<p>1. Personel, tecrübe ve mesleki birikimine uygun olarak, şirketin vereceği bütün işleri ve görevleri yapmayı kabul ve taahhüt eder. Bu hizmetleri karşılığında belirtilen aylık ücret dışında herhangi bir ücret talep edemez.</p>
+<p>2. İşçinin çalışma yeri, {{ isveren.unvan }} 'nin göstereceği adresinde bulunan şantiyedir.</p>
+<p>3. Personel, işverene ait işyerinde "{{ personel.gorevi }}" olarak çalışacaktır. Personel, işin niteliğine ve gereklerine uygun olarak, en az aynı veya benzer işlerde çalışanlardan beklenen verimlilik ve performansla çalışmayı kabul ve taahhüt etmiştir. Personel, eğitim, öğretim, tecrübe ve yeteneklerine uygun olarak üst amirlerinin kendisine vereceği işleri de yapacaktır. Personel, gereğinde üst amirlerinin görev vermesi halinde diğer bölümlerin işini de geçici veya daimî olarak yaptığı işe ilaveten yapacaktır.</p>
+<p>4. Personel, görevin ifasında ve işyeri disiplininin sağlanmasında; şirketin talimatlarına işveren tarafından belirlenen çalışma kurallarına, işyerinin genel politikalarına uyacağını kabul ve taahhüt eder. Personel, verilen işi özenle yapmak, ahlak ve iyi niyet kurallarına uymak, işçi sağlığı ve iş güvenliği tedbirlerine riayet etmekle yükümlüdür.</p>
+<p>5. Personel, görevi nedeniyle kendisine ve bağlı bulunduğu birime teslim edilen taşıtlar, demirbaşlar, her türlü mefruşat, elektronik teçhizat vb. eşyanın muhafazasından, hasar ve ziyan görmesinden sorumludur.</p>
+<p>6. Personel, görevi nedeniyle sahip olacağı işverenin sırlarını üçüncü şahıs ve kurumlara veremez. İşçinin bu hükümlere aykırı hareket etmesi halinde işverenin tazminat hakkı saklıdır.</p>
+<p>7. Personel, işverenin yazılı izni olmadan herhangi bir kuruluş, şirkette çalışamaz, herhangi bir sıfatla görev alamaz. İşveren izin verip vermemekte serbesttir.</p>
+<p>8. Personel, gerektiği takdirde işyeri içinde unvanı veya devamlı olarak işveren tarafından veya niteliği benzer yahut birbirine yakın başka işlerde veya muvafakat aranmaksızın geçici görevlendirilebilir. Personel, görülen işin niteliğinde benzerlik olması şartıyla işçilerin işverene bağlı ve il sınırları içindeki bir başka işyerine nakledilebilir. İşveren, personelden Türkiye'de herhangi bir mahalde çalışmasını isteme hakkını saklı tutar. Personel, işverene ait hangi mahalde olursa olsun (mevcut veya yeni kurulan/açılacak) Türkiye sınırları içinde yer alan diğer bütün işyerlerine tayinini/atanmasını ve tayin edilen yerde çalışmayı peşinen kabul eder. Aynı şekilde Personel, işverenin talebi olması halinde, işverene ait olmasa dahi işverenle veya yürütülen iş ile doğrudan veya dolaylı ilgisi bulunan işyerlerinde de sürekli veya geçici (ödünç) olarak çalışmaya muvafakat eder.</p>
+<p>9. Personel, işveren tarafından tespit edilen günlük ve haftalık mesai çalışma saatleri ile ilgili düzenlemelere uymak zorundadır. Personelin işveren tarafından belirlenen ve işyerinde ilan edilen çalışma saatlerine uymaması ve mesaiye geç kalması halinde çalışmadığı saat ücreti kesilir. Bir ay içinde iki defa geç gelen personele ihtar verilir. İhtar almış personel bir daha işe geç kalırsa o gün işbaşı yaptırılmaz ve işe gelmemiş kabul edilir ve o günkü ücreti ile hafta tatili ücreti kesilir.</p>
+<p>10. Personelin ücretinin Asgari Ücret ya da Brüt ücret olması durumlarında yıl içerisinde farklı gelir vergisi dilimlerine tabi olması, yasal mevzuatın devlet tarafından değiştirilmesi ve benzeri durumlarda meydana gelecek ücret değişikliklerini kabul eder.</p>
+<p>11. Personel, ay sonunda tahakkuk eden ve kendisine ücret bordrosu ile bildirilen ödemelere bir hafta içerisinde yazılı itiraz edebilir. Bir hafta içerisinde itirazda bulunulmaması halinde bordroya mutabık kalındığını kabul eder.</p>
+<p>10. Personel, istendiğinde fazla çalışma yapmayı, 4857 sayılı İş Kanunu’nun 64. maddesi hükmüne uygun olarak telafi çalışma yapmayı kabul eder, bayram ve genel tatil günlerinde çalışmayı peşinen kabul eder. Çalışılan ulusal bayram ve genel tatillerde çalışılan her gün için 4857 sayılı iş kanununa uygun olarak belirlenen günlük ücret ödenir.  Hafta içinde kendisine hafta tatili verilen personel için pazar günü “İş Günü” niteliğindedir.</p>
+<p>11. Personel, istediğinde hizmet içi veya görevin gerektirdiği diğer eğitimlere katılmak zorundadır. Bu çeşit personelden zorunlu hizmet talep edilebilir.</p>
+<p>12. Personel, ikamet adresinde değişiklik olursa bunu yazılı olarak bir hafta içinde işverene bildirmek zorundadır. İşçinin yasal tebligat adresi işyerindeki adrestir.</p>
+<p>13. Personel, işveren tarafından tespit edilen günlük ve haftalık mesai çalışma saatleri ile ilgili düzenlemelere uymak zorundadır. Aksi halde İş Kanunundaki devamsızlık hükümleri uygulanır.</p>
+<p>14. Normal çalışma günlerinde kanuni iş süreleri dışında veya ulusal ve dini bayram, genel tatil, hafta tatili günlerinde işverenin açıkça talep etmesi halinde çalışan, 4857 sayılı yasa hükümlerine göre fazla mesai yapmayı/çalışmayı kabul eder. Ancak, her halükârda işverenin talebi olmadan fazla mesai yapılmaz.</p>
+<p>15. Personel, 4857 sayılı İş Kanunu’nun ilgili hükümleri muvacehesinde yıllık 270 saate kadar yapacağı fazla mesai ücreti aylık ücrete dahildir. Ancak bir yıl içerisinde bunu aşan süreler olursa personel, işverenin fazla çalışma sürelerini serbest zaman olarak kullandırmasını, denkleştirme uygulaması yapmasını ve belirleyeceği zamanlarda telafi çalışması yaptırmasını kabul ve muvafakat etmiştir. Buna göre, serbest zaman uygulamasına geçilmesi halinde, fazla mesai yapan çalışan, bu çalışmaları karşılığı ücret yerine altı aylık süre zarfında, fazla çalıştığı her saat karşılığında bir saat otuz dakikayı serbest zaman olarak kullanacaktır. Buna ek olarak, Personel işverenin fazla mesai ile ilgili belirlediği ve uygulamakta olduğu politika ve prosedürleri de kabul etmiştir.</p>
+<p>16. Personelin aylık ücretinin içine, 4857 sayılı İş Kanunu'nun 41. maddesi uyarınca, yapacağı fazla mesailer nedeniyle hak kazanacağı ilave ücretler de dâhildir. Bu nedenle 4857 sayılı İş Kanunu'nun 41. maddesi uyarınca, bu madde sınırları içinde kalmak koşulu ile personele ilave bir ücret ödenmez. Personel, ay sonunda tahakkuk eden ve kendisine ücret bordrosu ile bildirilen ödemelere bir hafta içerisinde yazılı olarak itiraz edebilir. Bir hafta içerisinde itiraz da bulunulmaması halinde bordroya mutabık kalındığını kabul eder.</p>
+<p>17. Personel, aylık ücretinin ve eklerinin, işyerinin mutat ücret ödeme gününde, işverence banka hesabına yatırılmasını kabul etmiştir. Personel bunun için işverenin bildireceği bir bankada hesap açtıracaktır.</p>
+<p>18. Personelin aylık ücreti; işverenin belirleyeceği zamanlarda, enflasyon, iş hayatının gerekleri, performansı, şirkete bağlılık ve yararlılık vb. hususlar dikkate alınarak yeniden tespit edilebilir.</p>
+<p>19. Personel iş akdi devam ettiği sürece, kendisi veya başkaları hesabına, işverenin faaliyet alanına giren işleri yapamayacağı gibi, işverenin faaliyet konusu ile aynı konuda kurulmuş veya kurulacak şirketlere ortak olamaz.</p>
+<p>20. Personel, işverenin müşterilerini tanıyacak, işveren tarafından yetiştirilecek ve işin esasına vakıf olacak olması nedeniyle, iş sözleşmesinin herhangi bir sona (İşin ve üretimin daraltılması nedeniyle yapılacak toplu çıkartmalar hariç) erdirilmesini takip eden 1.5 yıl süre içinde, işveren şirketin faaliyet alanında  ve Isparta ili idari sınırlarında, ücretli veya ücretsiz olarak görev almamayı, aynı işi kendi nam ve hesabına yapmamayı, işverenle rekabet edecek nitelikte bir iş kurmamayı ve yine aynı ticaret dalında kurulmuş ve kurulacak gerçek ve/veya tüzel kişiliklere ortak olmamayı ve bu gerçek ve tüzel kişilikler nezdinde çalışmamayı, her ne faaliyet adı altında olursa olsun işbu sözleşmenin devamı esnasında çalışmaları sebebiyle edinmiş olduğu, şirkete ait teknik, mali, idari, ticari, fikri ve sınai, müşterilere ait bilgiler ile her türlü bilgiyi ve veri tabanını rekabet yaratacak bir iş veya işyerinde kullanmamayı kabul ve taahhüt eder.</p>
+<p>21. Personel, iş akdinin her ne sebeple olursa olsun sona ermesinden itibaren bir buçuk yıl (1.5) yıl süre ile işverenin; temsilciliğini, acenteliğini, bayiliğini, distribütörlüğünü, tek satıcılığını vb. gerçekleştirdiği gerçek ve/veya tüzel kişilerle doğrudan veya dolaylı olarak hiçbir şekilde ticari ilişki kurmayacağını taahhüt eder. Aksi davranışı halinde gerek işyerinin büyüklüğü ve gerekse işverenin uğrayacağı zararları tespit etmek mümkün olamayacağı taraflarca kabul edildiğinden, işçinin aksi davranışı halinde işverenin uğrayacağı zararların karşılığı olarak 12 aylık brüt ücret tutarında cezai şart ödemeyi kabul eder. Ancak, işverenin zararı bu miktarın üzerinde ise işçi fazlasını da tazmin ile mükelleftir. Personel, işverenin ilk talebinde derhal, nakden ve defaten verilen zararı ödemeyi kabul ve taahhüt eder.</p>
+<p>22. Personel, işverene, işverenin faaliyetine ve işyerine ait her türlü (teknik, idari, ticari) bilgileri, iş sırlarını saklamayı, işverene zarar verecek davranışlarda bulunmamayı taahhüt eder.</p>
+<p>23. Personel, işyerinde bulunan ve 3. şahısların işverene verdiği siparişler, yaptırdığı işler, yaptırdıkları imalata dair bilgi, belge veya alet veya edevatı işverenin rakiplerine veya sair şahıs ve kuruluşlara veremez, bildiremez. Personelin, işbu gizlilik konusundaki yükümlülüğü zamanla sınırlı olmaksızın işinden ayrılmasından sonra dahi devam eder.</p>
+<p>24. Personel, {{ isveren.unvan }} 'nin Isparta ili veya Şehir dışında taahhütte bulunduğu işlere ait işyerlerinde çalışmayı peşinen kabul etmiş sayılır.</p>
+
+<p><strong>MADDE 2) İŞVERENİN SORUMLULUKLARI:</strong></p>
+
+<p>1. İşveren, personele ücretini çalıştığı her ayı takip eden 15. gününe kadar ödeyecektir.</p>
+<p>2. İşveren, işçilik haklarını ödemek, ahlak ve iyi niyet kurallarına uymak, işçi sağlığı ve iş güvenliği tedbirlerini almakla yükümlüdür.</p>
+<p>3. Asgari Ücret dışında çalışan personelin ücretine yapılacak zam tamamen işverenin takdirindedir.</p>
+<p>4. İşveren, personele evlilik halinde 3 gün, evlat edinmesi halinde 3 gün, ana-baba-kardeş-eş ve çocukların ölümü halinde 3 gün, eşinin doğum yapmasında 5 gün, ücretli izin verir. İşçilerin en az yüzde yetmiş oranında engelli veya süreğen hastalığı olan çocuğunun tedavisinde, hastalık raporuna dayalı olarak ve çalışan ebeveynden sadece biri tarafından kullanılması kaydıyla, bir yıl içinde toptan veya bölümler halinde on güne kadar ücretli izin verilir. İşveren, 4857 sayılı İş Kanunu’nda belirtilen kıdeme göre 14–20 ve 26 gün ücretli izin vermek zorundadır. Ücretli izinlerin kullanılmasında İşverenin yönetim hakkı kapsamındaki yetkileri göz önünde bulundurulacak ve işin aksamaması ölçüsü doğrultusunda izinlerin kullanımına İşveren tarafından karar verilecektir. Personel yıllık iznini kullanırken, işyerinde veya başkasının işyerinde, işveren veya başkası için ücretli çalışamaz. Çalışırsa; işverenin tazminatsız haklı nedenle derhal fesih hakkı doğar.</p>
+<p>5. İşçinin talep ettiği ücretsiz izinlerin verilip verilmemesi tamamen işverenin takdirindedir. Ücretsiz izin süresince işçiye herhangi bir ücret ödenmez.</p>
+
+<p><strong>MADDE 3) ÖZEL ŞARTLAR</strong></p>
+
+<p>1. İşçi çalışmış olduğu mesai arkadaşları ile iyi geçinmek zorundadır. İşçi mesai arkadaşlarını var olan görüşlerinden veya hal ve hareketlerinden dolayı yargılayamaz. İşçi mesai arkadaşları işyerinde yokmuş gibi davranamaz, onları aşağılayamaz, rencide edemez. İşyerindeki huzursuzluk ortamlarında sorumlu olan kişinin iş sözleşmesi fesholur.</p>
+<p>2. İşçi almış olduğu ücreti açıklayamaz. Açıklar ise iş sözleşmesi fesholur.</p>
+<p>3. İşçi işyerinde çalışır iken farklı bir işyeri ile anlaşma yapamaz, yapar ise mevcut olan asgari ücretin on katını ödemeyi peşinen kabul eder.</p>
+<p>4. İşçi işverenin kazancını araştıramaz, işvereni yargılayamaz.</p>
+<p>5. İşçi işyerinde bulunmuş olduğu süre içerisinde konuşmalarına hal ve hareketlerine dikkat eder, ciddi olur.</p>
+<p>6. İşveren işyerinde olmadığı sürelerde işyerinin devam ve düzenini işveren tarafından görev ve yetki verilen işveren vekili sağlar. Bu durumlarda işçi onun vermiş olduğu görevleri yerine getirmekle sorumludur.</p>
+<p>7. İşverenin, personelin/işçilerin bir bölümüne veya tümüne sözleşme gereği olmaksızın, teşvik amaçlı olarak yapacağı süreklilik arz etmeyen nakdi ve ayni ödemeler, personel bakımından kazanılmış hak niteliğinde değildir, tekrarlanacağı anlamına da gelmez.</p>
+<p>8. Personel, işiyle ilgili gerektiğinde, işverenin ve üst amirlerinin talebi ile yurt içinde iş seyahati yapmayı kabul eder. Personel iş seyahatlerinde işvereni en iyi şekilde temsil edecektir. Harcamalarını şirketin hak ve menfaatlerini değerlendirerek tanınan imkânlar nispetinde yapacaktır. İşveren olağan dışı ve belgesiz harcamaları karşılamakla yükümlü değildir.</p>
+<p>9. Personel, yıllık ücretli izinde, Ulusal Bayram ve genel tatil günlerinde arandığında bulunabilecek yerin adresini ve telefon numarasını işyerine bildirir.</p>
+<p>10. Personel, işyerindeki demirbaş, makine, alet ve elektronik teçhizatı usulüne uygun olarak ve özenle kullanmayı, görevi ile ilgili olmayan işlerle uğraşmamayı, kendisine teslim edilmemiş, makine, alet ve edevatı kullanmamayı taahhüt eder. Hizmet akdi sona erdiğinde, kendisinin şahsen kullanımına veya işi gereği kullanımına verilmiş demirbaşlar ile giyim ve kullanım eşyalarını işyerindeki amirlerine teslim etmekle mükelleftir. Aksi halde, söz konusu nesnelerin bedelini tazmin etmekle mükelleftir.</p>
+<p>11. Personel, işyerine sarhoş veya uyuşturucu madde almış olarak gelmemeyi ve bu maddeleri işyerinde kullanmamayı, çalışması ile ilgili olmayan eşya ve maddeler ile taşınması ya da kullanılması yasaklanmış maddeleri işyerine sokmamayı taahhüt eder.</p>
+<p>12. Personel, iş sözleşmesinin feshinde, kendisine teslim edilmiş bulunan her türü demirbaş eşyayı eksiksiz olarak teslim etmeyi, kendi kasıt veya kusurundan meydana gelmiş zararlar varsa, tazmin etmeyi taahhüt eder.</p>
+<p>13. Personel, işbu hizmet akdini haksız olarak feshetmesi yahut kusuru ile veya yükümlülüklerini belirlenen süre ve şartlar dahilinde yerine getirmemesi yüzünden işbu hizmet akdinin işveren tarafından feshine sebebiyet vermesi hallerinde; işverenin hizmet konusu ile ilgili kendisine sağlamış olduğu/sağlayacağı her türlü eğitim giderlerini işverenin ilk talebinde, derhal, nakden ve defaten ödemeyi kabul, beyan ve taahhüt eder.</p>
+<p>14. İşe alım sırasında personele alacağı ücret açık ve net olarak bildirilmiştir. Kendisine verilen ücreti az bularak hizmet akdini fesheden işçi istifa etmiş sayılır, ihbar ve kıdem tazminatı almaya hak kazanamaz.</p>
+<p>15. Haklı nedenlerle derhal fesih hakkının doğduğu durumlarda İş Yasası gereğince savunma alınmayacaktır, ihbar ve kıdem tazminatı ödenmeksizin sözleşme feshedilecektir.</p>
+<p>16. Personelin, işverenin faaliyet alanına dahil olan alanlarda ve yükümlü olduğu faaliyeti gereği gerçekleştireceği çalışmalar ve üreteceği ürünler işverenin sayılır ve işveren bu çalışmalar ve ürünler üzerinde her türlü fikri mülkiyet hakkının münhasır hak sahibidir. Personelin bu çalışmalar ve ürünler üzerinde hiçbir hakkı olmayacağı gibi, buna aykırı davranışları gizlilik yasağının ihlali sayılır.</p>
+<p>17. İşveren bünyesinde bulunan bilgisayar vb. ekipman ya da e-posta adreslerden yapılan yazışmaları, görüşmeleri, bağlantıları, kullanılan siteleri vb. teknik detayları, işverenin her zaman denetleme yetkisi bulunmaktadır. Ayrıca personel; şirket bünyesinde tüm sesli/görüntülü kayıt sistemlerinin kullanıldığını, işbu kamera ya da ses kayıt cihazlarının işveren, işveren vekili ya da amirleri tarafından izlenmekte ya da denetlenmekte olduğunu bildiğini, bu kayıtlar hakkında özel hayatın gizliliğinin ihlal edildiği yönünde bir iddiada bulunamayacağını bilmekte ve kabul etmektedir. Personel; İşverenin yapacağı denetimlerde, sesli ve görüntülü cihazlarla, yazışmalarla vb. yolla çalışanın yüklendiği işin niteliklerine, dürüstlüğe aykırı söz ve davranışlarda bulunduğunu tespit ederde iş akdinin haklı nedenle derhal feshedileceğini bilmekte ve kabul etmektedir.</p>
+<p>18. Taraflar işbu sözleşmenin herhangi bir maddesinin, paragrafının, cümlesinin veya kelimesinin geçersiz addolunması halinde söz konusu geçersiz madde, cümle veya kelime dışında sözleşmenin tümü ile geçerliliğini koruyacağı konusunda mutabıktırlar.</p>
+<p>19. İşbu sözleşmede hüküm bulunmayan hallerde İş Kanunu, Borçlar Kanunu ve diğer ilgili mevzuatın hükümleri bu sözleşmedeki diğer koşullara aykırı olmamak kaydıyla uygulanır.</p>
+
+<p><strong>MADDE 4) SÖZLEŞME SÜRESİ, FESHİ VE TAZMİNATLAR:</strong></p>
+
+<p>1. İşçi ve işveren yukarıdaki maddelerde yazılı sorumluluklarını yerine getirmez ise karşı tarafa sözleşmeyi feshetme hakkı doğduğunu kabul ve taahhüt etmişlerdir. İşyeri personel disiplin yönetmeliği hizmet akdinin devamı niteliğindedir.</p>
+<p>2. Sözleşme belirli sürelidir. Sözleşmenin süresi {{ sozlesme.baslangic|date:"d.m.Y" }} ve {{ sozlesme.bitis|date:"d.m.Y" }} Tarihleri arasıdır.  {{ sozlesme.isin_adi }} Yapım İşinin tamamlanmasına kadardır. Sözleşme süresinin sona ermesiyle, iş sözleşmesi kendiliğinden sona erer.</p>
+<p>3. İşveren sözleşmeyi; sözleşme süresi içerisinde veya bitim tarihinde tek taraflı olarak haklı bir neden ile feshederse, personele tazminat ödemekle yükümlü değildir</p>
+
+<p><strong>MADDE 5) SON HÜKÜMLER:</strong></p>
+
+<p>1. Sözleşmede düzenlenmemiş konularda kanun ve mevzuat hükümleri saklıdır.</p>
+<p>2. Uyuşmazlıklarda Isparta İcra Daireleri ve Mahkemeleri yetkilidir.</p>
+<p>3. İş bu Belirli Süreli İş Sözleşmesi {{ sozlesme.imza }} tarihinde tarafların serbest iradeleriyle imzalanarak yürürlüğe girmiştir.</p>
+
+<div style="margin-top:60px; width:100%; overflow:hidden;">
+  
+  <div style="width:45%; float:left; text-align:center;">
+    <strong>İşveren</strong><br><br>
+    {{ isveren.unvan }}<br><br><br>
+    (İmza – Kaşe)
+  </div>
+
+  <div style="width:45%; float:right; text-align:center;">
+    <strong>İşçi / Personel</strong><br><br>
+    {{ personel.ad_soyad }}<br><br><br>
+    (İmza)
+  </div>
+
+</div>
+
+
+</body>
+</html>

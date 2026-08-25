@@ -1,0 +1,4 @@
+{% extends "base.html" %}
+{% block content %}
+<h2>{{ title }}</h2><div class="card">{% if form.errors %}<div class="form-errors" role="alert">Lütfen işaretli alanları kontrol edin.</div>{% endif %}<form method="post">{% csrf_token %}<div class="grid">{% for field in form %}<div>{{ field.label_tag }}{{ field }}{{ field.errors }}</div>{% endfor %}</div><div class="actions"><button type="submit">Kaydet</button><a class="btn light" href="{% url 'ek_kazanc_prim_liste' %}">Listeye Dön</a></div></form></div>
+{% endblock %}

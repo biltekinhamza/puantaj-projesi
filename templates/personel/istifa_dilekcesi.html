@@ -1,0 +1,121 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+    <meta charset="UTF-8">
+    <title>İstifa Dilekçesi</title>
+
+    <style>
+
+    .paragraf {
+    text-indent: 2.5cm;   /* paragraf başı */
+    margin-top: 20px;
+    line-height: 1.6;
+}
+
+
+@page { size: A4; margin: 2.5cm; }
+
+body { font-family: "Times New Roman", serif; background: #eee; }
+
+.top-bar { margin: 10px; }
+
+.a4 {
+    width: 21cm;
+    min-height: 29.7cm;
+    background: white;
+    margin: 20px auto;
+    padding: 2.5cm;
+    box-shadow: 0 0 5px rgba(0,0,0,.2);
+}
+
+.title { text-align: center; font-weight: bold; margin-bottom: 40px; }
+
+.content { font-size: 14pt; line-height: 1.6; }
+
+.signature {
+    margin-top: 80px;
+    display: flex;
+    justify-content: space-between;
+}
+
+.signature div { width: 45%; }
+
+.signature .right { text-align: right; }
+
+@media print {
+    body { background: white; }
+    .top-bar { display: none; }
+    .a4 { margin: 0; box-shadow: none; }
+}
+</style>
+</head>
+
+<body>
+
+<div class="top-bar">
+    <form method="get">
+        Personel:
+        <select name="personel">
+            {% for p in personeller %}
+                <option value="{{ p.id }}"
+                    {% if secili_personel and p.id == secili_personel.id %}selected{% endif %}>
+                    {{ p.ad_soyad }}
+                </option>
+            {% endfor %}
+        </select>
+
+        Tarih:
+        <input type="date" name="tarih" value="{{ tarih|date:'Y-m-d' }}">
+
+        <button type="submit">Getir</button>
+        <button type="button" onclick="window.print()">Yazdır</button>
+    </form>
+</div>
+
+<div class="a4">
+
+    <div class="title">{{ sirket.ticari_unvan|upper }}</div>
+
+    <div class="content">
+        {% if secili_personel %}
+
+        <p class="paragraf">
+            İşyerinizde yürütmekte olduğum görevimden, kendi isteğimle ve hiçbir baskı
+            altında kalmaksızın {{ tarih|date:"d.m.Y" }} tarihi itibarıyla istifa
+            ettiğimi bildiririm.
+        </p>
+
+        <p>
+            İş akdimin sona ermesi nedeniyle tarafıma ödenmesi gereken ücret, fazla
+            mesai, izin, tazminat ve benzeri tüm yasal haklarımı eksiksiz olarak
+            aldığımı, bu konuda işletmenizden herhangi bir hak ve alacağımın
+            kalmadığını beyan ederim. Gereğini bilgilerinize arz ederim.
+        </p>
+
+        <p>
+            Saygılarımla,
+        </p>
+
+        {% endif %}
+    </div>
+
+    <!-- ✅ İMZA BLOĞU A4 İÇİNDE -->
+    <div class="signature">
+        <div>
+            <strong> </strong><br>
+             
+        </div>
+
+        <div class="right">
+            <strong>{{ tarih|date:"d.m.Y" }}</strong><br>
+            {% if secili_personel %}
+                {{ secili_personel.ad_soyad }}
+            {% endif %}
+        </div>
+    </div>
+
+</div>
+
+
+</body>
+</html>

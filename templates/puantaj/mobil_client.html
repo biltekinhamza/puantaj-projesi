@@ -1,0 +1,36 @@
+{% load static %}
+<!doctype html>
+<html lang="tr">
+<head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover"><meta name="theme-color" content="#0c2442"><title>Mobil Puantaj | {{ sirket.kisa_ad }}</title><link rel="stylesheet" href="{% static 'css/mobile_client.css' %}?v=5"></head>
+<body>
+  <header class="mobile-header"><div class="mobile-brand"><strong>Mobil Puantaj</strong><small>{{ sirket.kisa_ad }}</small></div><form class="logout" method="post" action="/logout/">{% csrf_token %}<button type="submit">Çıkış</button></form></header>
+  <main class="mobile-main">
+    <section class="day-head"><h1>{{ bugun|date:"d F Y" }}</h1><p>Personel kartına dokunarak geldi olarak işaretleyin.</p></section>
+    <section class="summary" aria-live="polite"><strong>Günlük ilerleme</strong><span id="summary-text">{{ ozet.kayitli }} / {{ ozet.toplam }}</span><div class="progress"><span id="progress-bar" style="width:{% widthratio ozet.kayitli ozet.toplam 100 %}%"></span></div></section>
+    <div class="search"><label for="person-search" style="position:absolute;clip:rect(0,0,0,0)">Personel ara</label><input id="person-search" type="search" placeholder="Personel ara..." autocomplete="off"></div>
+    <form id="csrf-form" hidden>{% csrf_token %}</form>
+    <section class="person-list" id="person-list">
+      {% for row in rows %}
+      <article class="person-card {% if row.kayitli %}status-{{ row.kod }}{% else %}pending{% endif %}" data-person-id="{{ row.personel.id }}" data-name="{{ row.personel.ad_soyad|lower }}" data-status="{{ row.kod|default:'X' }}" data-recorded="{% if row.kayitli %}1{% else %}0{% endif %}">
+        <button class="person-main" type="button"><span>{{ row.personel.ad_soyad }}</span><span class="status-row"><span class="status-badge">{% if row.kayitli %}{% if row.kod == 'G' %}Geldi{% elif row.kod == 'İ' %}Ücretli İzin{% elif row.kod == 'X' %}Gelmedi{% elif row.kod == 'U' %}Ücretsiz İzin{% elif row.kod == 'Y' %}Yarım Gün{% else %}{{ row.kod }}{% endif %}{% else %}İşaretlenmedi{% endif %}</span>{% if row.personel.gorevi %}<span class="person-role" title="{{ row.personel.gorevi }}">{{ row.personel.gorevi }}</span>{% endif %}</span></button>
+        <div class="person-actions"><button class="status-btn {% if row.kod == 'U' %}active{% endif %}" type="button" data-code="U">Ücretsiz İzin</button><button class="status-btn {% if row.kod == 'X' and row.kayitli %}active{% endif %}" type="button" data-code="X">Gelmedi</button></div>
+      </article>
+      {% empty %}<p>Bugün için aktif personel bulunamadı.</p>{% endfor %}
+    </section>
+  </main>
+  <div class="complete-bar"><button id="complete-day" type="button" {% if ozet.tamamlandi %}disabled{% endif %}>{% if ozet.tamamlandi %}Gün Tamamlandı{% else %}Günü Tamamla{% endif %}</button></div>
+  <div class="toast" id="toast" role="status" aria-live="polite"></div>
+  <script>
+  (function(){
+    var csrf=document.querySelector('#csrf-form input').value, toast=document.getElementById('toast'), total={{ ozet.toplam }}, recorded={{ ozet.kayitli }};
+    function notify(text,error){toast.textContent=text;toast.className='toast show'+(error?' error':'');clearTimeout(window.toastTimer);window.toastTimer=setTimeout(function(){toast.className='toast';},2200)}
+    function label(code){return code==='G'?'Geldi':code==='U'?'Ücretsiz İzin':'Gelmedi'}
+    function updateSummary(data){recorded=data.kayitli;total=data.toplam;document.getElementById('summary-text').textContent=recorded+' / '+total;document.getElementById('progress-bar').style.width=(total?recorded/total*100:0)+'%';var complete=document.getElementById('complete-day');complete.disabled=data.tamamlandi;complete.textContent=data.tamamlandi?'Gün Tamamlandı':'Günü Tamamla'}
+    async function save(card,code){card.classList.add('saving');try{var response=await fetch('{% url "mobil_durum_kaydet" %}',{method:'POST',headers:{'Content-Type':'application/json','X-CSRFToken':csrf},body:JSON.stringify({personel_id:card.dataset.personId,kod:code})});var data=await response.json();if(!response.ok)throw new Error(data.hata||'Kayıt yapılamadı.');card.className='person-card status-'+code;card.dataset.status=code;card.dataset.recorded='1';card.querySelector('.status-badge').textContent=label(code);card.querySelectorAll('.status-btn').forEach(function(button){button.classList.toggle('active',button.dataset.code===code)});updateSummary(data.ozet);notify('Kaydedildi: '+label(code));}catch(error){card.classList.remove('saving');notify(error.message,true)}}
+    document.querySelectorAll('.person-card').forEach(function(card){card.querySelector('.person-main').addEventListener('click',function(){save(card,'G')});card.querySelectorAll('.status-btn').forEach(function(button){button.addEventListener('click',function(){save(card,button.dataset.code)})})});
+    function normalizeSearch(value){return value.toLocaleLowerCase('tr-TR').replace(/ı/g,'i').normalize('NFD').replace(/[\u0300-\u036f]/g,'')}
+    document.getElementById('person-search').addEventListener('input',function(){var term=normalizeSearch(this.value);document.querySelectorAll('.person-card').forEach(function(card){card.hidden=!normalizeSearch(card.dataset.name).includes(term)})});
+    document.getElementById('complete-day').addEventListener('click',async function(){if(!confirm('İşaretlenmeyen personeller Gelmedi olarak kaydedilecek. Günü tamamlamak istiyor musunuz?'))return;this.disabled=true;try{var response=await fetch('{% url "mobil_gunu_tamamla" %}',{method:'POST',headers:{'X-CSRFToken':csrf}});var data=await response.json();if(!response.ok)throw new Error(data.hata||'Gün tamamlanamadı.');document.querySelectorAll('.person-card[data-recorded="0"]').forEach(function(card){card.className='person-card status-X';card.dataset.recorded='1';card.dataset.status='X';card.querySelector('.status-badge').textContent='Gelmedi';card.querySelector('[data-code="X"]').classList.add('active')});updateSummary(data.ozet);notify(data.eklenen+' personel Gelmedi olarak kaydedildi.')}catch(error){this.disabled=false;notify(error.message,true)}});
+  })();
+  </script>
+</body></html>

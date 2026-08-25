@@ -1,0 +1,4 @@
+{% extends "base.html" %}
+{% block content %}
+<h2>{{ title }}</h2><div class="card"><form method="post">{% csrf_token %}<div class="grid">{% for field in form %}<div>{{ field.label_tag }}{{ field }}{{ field.errors }}</div>{% endfor %}</div><div class="actions"><button type="submit">Kaydet</button><a class="btn light" href="javascript:history.back()">Geri</a></div></form></div>
+{% endblock %}

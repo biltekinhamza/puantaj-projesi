@@ -1,0 +1,41 @@
+{% extends "base.html" %}
+{% block title %}Banka ve Elden Ödeme | {{ sirket.kisa_ad }}{% endblock %}
+{% block content %}
+<div class="page-header"><div><h1>Banka ve Elden Ödeme Listesi</h1><p class="muted">Net ödemeyi banka ve elden tutarlarına dağıtın.</p></div></div>
+<div class="card">
+  <form method="get" class="filters">
+    <div class="field"><label for="banka-baslangic">Başlangıç</label><input id="banka-baslangic" type="date" name="baslangic" value="{{ baslangic }}" required></div>
+    <div class="field"><label for="banka-bitis">Bitiş</label><input id="banka-bitis" type="date" name="bitis" value="{{ bitis }}" required></div>
+    <div class="field"><button type="submit">Listeyi Getir</button></div>
+  </form>
+  {% if baslangic and bitis %}<div class="report-meta"><strong>Ödeme Dönemi:</strong><span>{{ baslangic }} - {{ bitis }}</span><span>{{ rows|length }} personel</span></div>{% endif %}
+  {% if hata %}<div class="form-errors" role="alert">{{ hata }}</div>{% endif %}
+  {% if rows %}
+  <form method="post" action="?baslangic={{ baslangic }}&bitis={{ bitis }}">
+    {% csrf_token %}<input type="hidden" name="baslangic" value="{{ baslangic }}"><input type="hidden" name="bitis" value="{{ bitis }}">
+    <table aria-label="Banka ve elden ödeme listesi"><caption class="sr-only">Personel net, banka ve elden ödeme tutarları</caption><thead><tr><th scope="col">Ad Soyad</th><th scope="col">TC Kimlik</th><th scope="col">IBAN</th><th scope="col">Net Maaş</th><th scope="col">Banka</th><th scope="col">Elden</th></tr></thead><tbody>
+    {% for r in rows %}<tr><th scope="row">{{ r.personel.ad_soyad }}</th><td>{{ r.personel.tc_kimlik_no|default:"" }}</td><td>{{ r.personel.iban|default:"" }}</td><td class="net-maas" data-net="{{ r.net_maas }}">{{ r.net_maas }}</td><td><input class="banka-input" type="text" inputmode="decimal" name="banka_{{ r.personel.id }}" value="{{ r.banka }}" data-net="{{ r.net_maas }}" aria-label="{{ r.personel.ad_soyad }} banka tutarı"></td><td><span class="elden-tutar" aria-live="polite">{{ r.elden }}</span></td></tr>{% endfor %}
+    </tbody></table>
+    <div class="actions"><button type="submit">Banka Tutarlarını Kaydet</button><button type="submit" class="btn light" formaction="?baslangic={{ baslangic }}&bitis={{ bitis }}&excel=1">Kaydet ve Excel İndir</button></div>
+  </form>
+  {% else %}<p class="muted">{% if baslangic and bitis %}Seçili dönemde ödeme kaydı bulunamadı.{% else %}Liste için tarih aralığı seçin.{% endif %}</p>{% endif %}
+</div>
+{% endblock %}
+{% block extra_js %}
+<script>
+(function () {
+  function parseMoney(value) { return parseFloat(String(value == null ? 0 : value).replace(',', '.')) || 0; }
+  function formatMoney(value) { return value.toLocaleString('tr-TR', {minimumFractionDigits: 2, maximumFractionDigits: 2}); }
+  document.querySelectorAll('.banka-input').forEach(function (input) {
+    function recalc() {
+      var net = parseMoney(input.dataset.net), banka = parseMoney(input.value), row = input.closest('tr');
+      input.setCustomValidity('');
+      if (banka < 0) input.setCustomValidity('Banka tutarı negatif olamaz.');
+      if (banka > net) input.setCustomValidity('Banka tutarı net maaşı aşamaz.');
+      row.querySelector('.elden-tutar').textContent = formatMoney(Math.max(net - Math.max(banka, 0), 0));
+    }
+    input.addEventListener('input', recalc); input.addEventListener('change', recalc); recalc();
+  });
+})();
+</script>
+{% endblock %}

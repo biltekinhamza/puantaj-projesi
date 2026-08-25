@@ -1,0 +1,5 @@
+{% extends "base.html" %}
+{% block title %}Giriş | {{ sirket.kisa_ad }}{% endblock %}
+{% block content %}
+<div class="auth-shell"><div class="card auth-card"><h1>Giriş Yap</h1><p class="muted">Puantaj yönetim paneline erişmek için bilgilerinizi girin.</p>{% if form.errors %}<div class="form-errors" role="alert">Kullanıcı adı veya parola hatalı.</div>{% endif %}<form method="post">{% csrf_token %}{{ form.as_p }}<button type="submit">Giriş Yap</button></form></div></div>
+{% endblock %}

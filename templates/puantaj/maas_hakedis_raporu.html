@@ -1,0 +1,12 @@
+{% extends "base.html" %}
+{% block title %}Maaş ve Hakediş Raporu | {{ sirket.kisa_ad }}{% endblock %}
+{% block content %}
+<div class="page-header"><div><h1>Maaş ve Hakediş Raporu</h1><p class="muted">Maaş, ek kazanç, kesinti ve net ödeme özeti.</p></div></div>
+<div class="card">
+  <form method="get" class="filters"><div class="field"><label for="maas-baslangic">Başlangıç</label><input id="maas-baslangic" type="date" name="baslangic" value="{{ baslangic }}" required></div><div class="field"><label for="maas-bitis">Bitiş</label><input id="maas-bitis" type="date" name="bitis" value="{{ bitis }}" required></div><div class="field"><button type="submit">Raporu Getir</button></div>{% if rows %}<div class="field"><a class="btn light" href="?baslangic={{ baslangic }}&bitis={{ bitis }}&excel=1">Excel İndir</a></div>{% endif %}</form>
+  {% if baslangic and bitis %}<div class="report-meta"><strong>Rapor Dönemi:</strong><span>{{ baslangic }} - {{ bitis }}</span><span>{{ rows|length }} personel</span></div>{% endif %}
+  <table aria-label="Maaş ve hakediş raporu"><caption class="sr-only">Seçili döneme ait maaş ve hakediş özeti</caption><thead><tr><th scope="col">Personel</th><th scope="col">Resmi Tatil Gün</th><th scope="col">Hakediş Gün</th><th scope="col">Hak Edilen Maaş</th><th scope="col">Mesai Saat</th><th scope="col">Mesai TL</th><th scope="col">Prim</th><th scope="col">Avans</th><th scope="col">İcra</th><th scope="col">Net Ödenecek</th></tr></thead><tbody>
+  {% for r in rows %}<tr><th scope="row">{{ r.personel.ad_soyad }}</th><td>{{ r.resmi_tatil_gun|floatformat:"-2" }}</td><td>{{ r.hak_edilen_gun|floatformat:"-2" }}</td><td>{{ r.hak_edilen_maas }}</td><td>{{ r.mesai_saat|floatformat:"-2" }}</td><td>{{ r.mesai_tutar }}</td><td>{{ r.prim_tutar }}</td><td>{{ r.avans_tutar }}</td><td>{{ r.icra_tutar }}</td><td><strong>{{ r.net_odenecek }}</strong></td></tr>{% empty %}<tr><td colspan="10">{% if baslangic and bitis %}Seçili dönemde kayıt bulunamadı.{% else %}Rapor için tarih aralığı seçin.{% endif %}</td></tr>{% endfor %}
+  </tbody></table>
+</div>
+{% endblock %}

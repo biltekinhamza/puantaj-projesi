@@ -1,0 +1,74 @@
+{% extends "base.html" %}
+{% block content %}
+<h2>Devamsızlık Tutanağı </h2>
+
+<form method="get">
+  <label>Personel</label><br>
+  <select name="personel" required>
+    {% for p in personeller %}
+      <option value="{{ p.id }}" {% if secili_personel and p.id == secili_personel.id %}selected{% endif %}>
+        {{ p.ad_soyad }}
+      </option>
+    {% endfor %}
+  </select>
+  <br><br>
+
+  <label>Devamsızlık Tarihi</label><br>
+  <input type="date" name="devamsizlik_tarihi" value="{{ devamsizlik_tarihi|date:'Y-m-d' }}" required>
+  <br><br>
+
+  <label>İş Başı Saati</label><br>
+  <input type="time" name="isbasi_saati" value="{{ isbasi_saati|default:'08:00' }}" required>
+  <br><br>
+
+  <label>Tutanak Tarihi</label><br>
+  <input type="date" name="tutanak_tarihi" value="{{ tutanak_tarihi|date:'Y-m-d' }}" required>
+  <br><br>
+
+  <label>Tutanak Saati</label><br>
+  <input type="time" name="tutanak_saati" value="{{ tutanak_saati|default:'09:30' }}" required>
+  <br><br>
+
+  <label>İş Adresi (metin)</label><br>
+  <input type="text" name="adres" value="{{ adres|default:'' }}" style="width: 400px;" required>
+  <br><br>
+
+  <label>Tanık 1 (Personelden)</label><br>
+  <select name="tanik1" required>
+    {% for p in personeller %}
+      <option value="{{ p.id }}" {% if tanik1 and p.id == tanik1.id %}selected{% endif %}>
+        {{ p.ad_soyad }}
+      </option>
+    {% endfor %}
+  </select>
+  <br><br>
+
+  <label>Tanık 2 (Personelden)</label><br>
+  <select name="tanik2" required>
+    {% for p in personeller %}
+      <option value="{{ p.id }}" {% if tanik2 and p.id == tanik2.id %}selected{% endif %}>
+        {{ p.ad_soyad }}
+      </option>
+    {% endfor %}
+  </select>
+  <br><br>
+
+  <label>İşveren Yetkilisi (metin)</label><br>
+  <input type="text" name="isveren_yetkilisi" value="{{ isveren_yetkilisi|default:'' }}" style="width: 400px;" required>
+    <br><br>
+
+
+  <button type="submit">Tutanağı Aç</button>
+
+{% if secili_personel and tanik1 and tanik2 %}
+  <a
+    href="{% url 'devamsizlik_tutanagi' %}?personel={{ secili_personel.id }}&devamsizlik_tarihi={{ devamsizlik_tarihi|date:'Y-m-d' }}&isbasi_saati={{ isbasi_saati }}&tutanak_tarihi={{ tutanak_tarihi|date:'Y-m-d' }}&tutanak_saati={{ tutanak_saati }}&tanik1={{ tanik1.id }}&tanik2={{ tanik2.id }}&adres={{ adres|urlencode }}&isveren_yetkilisi={{ isveren_yetkilisi|urlencode }}"
+    target="_blank"
+    style="margin-left:12px; padding:8px 12px; border:1px solid #000; text-decoration:none;"
+  >
+    Yazdır / PDF
+  </a>
+{% endif %}
+
+</form>
+{% endblock %}

@@ -1,0 +1,17 @@
+{% extends "base.html" %}
+{% block title %}Personel Listesi | {{ sirket.kisa_ad }}{% endblock %}
+{% block content %}
+<div class="page-header"><div><h1>Personel Listesi</h1><p class="muted">Çalışan bilgilerini filtreleyin ve düzenleyin.</p></div><a class="btn" href="{% url 'personel_ekle' %}">Yeni Personel</a></div>
+<div class="card">
+  <form method="get" class="filters">
+    <div class="field"><label>Durum</label><select name="durum"><option value="tum" {% if durum == "tum" %}selected{% endif %}>Tümü</option><option value="calisan" {% if durum == "calisan" %}selected{% endif %}>Çalışanlar</option><option value="cikan" {% if durum == "cikan" %}selected{% endif %}>İşten çıkanlar</option><option value="planli_cikis" {% if durum == "planli_cikis" %}selected{% endif %}>Çıkışı planlananlar</option></select></div>
+    <div class="field"><label>Personel Türü</label><select name="personel_turu"><option value="">Tümü</option><option value="sirket" {% if secili_personel_turu == "sirket" %}selected{% endif %}>Şirket</option><option value="taseron" {% if secili_personel_turu == "taseron" %}selected{% endif %}>Taşeron</option></select></div>
+    <div class="field"><label>Departman</label><select name="departman"><option value="">Tümü</option>{% for d in departmanlar %}<option value="{{ d }}" {% if secili_departman == d %}selected{% endif %}>{{ d }}</option>{% endfor %}</select></div>
+    <div class="field"><button type="submit">Filtrele</button></div>
+  </form>
+  <p class="muted">Toplam: {{ toplam_sayisi }}</p>
+  <table aria-label="Personel listesi"><thead><tr><th scope="col">Ad Soyad</th><th scope="col">Durum</th><th scope="col">Tür</th><th scope="col">TC</th><th scope="col">IBAN</th><th scope="col">Departman</th><th scope="col">Görev</th><th scope="col">Giriş</th><th scope="col">Çıkış</th><th scope="col">Maaş/Yevmiye</th><th scope="col">İşlem</th></tr></thead><tbody>
+  {% for p in personeller %}<tr><td><strong>{{ p.ad_soyad }}</strong></td><td><span class="badge {% if p.durum == 'Çalışıyor' %}ok{% elif p.durum == 'Çıkışı Planlandı' %}warn{% else %}bad{% endif %}">{{ p.durum }}</span></td><td>{{ p.get_personel_turu_display }}</td><td>{{ p.tc_kimlik_no|default:"" }}</td><td>{{ p.iban|default:"" }}</td><td>{{ p.departman|default:"" }}</td><td>{{ p.gorevi|default:"" }}</td><td>{{ p.ise_giris_tarihi|date:"d.m.Y" }}</td><td>{{ p.isten_cikis_tarihi|date:"d.m.Y" }}</td><td>{% if p.personel_turu == 'sirket' %}{{ p.aylik_maas }}{% else %}{{ p.gunluk_yevmiyesi }}{% endif %}</td><td><a class="btn light" href="{% url 'personel_guncelle' p.id %}">Düzenle</a></td></tr>{% empty %}<tr><td colspan="11">Kayıt yok.</td></tr>{% endfor %}
+  </tbody></table>
+</div>
+{% endblock %}

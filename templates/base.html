@@ -1,0 +1,101 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <meta name="theme-color" content="#0f2747">
+  <title>{% block title %}{{ sirket.kisa_ad }} Puantaj{% endblock %}</title>
+  <link rel="stylesheet" href="{% static 'css/style.css' %}?v=4">
+  {% block extra_css %}{% endblock %}
+</head>
+<body>
+  <a class="skip-link" href="#main-content">İçeriğe geç</a>
+  <header class="navbar">
+    <div class="navbar-inner">
+      <a class="brand" href="/" aria-label="{{ sirket.kisa_ad }} ana sayfa">
+        <span class="brand-mark">{{ sirket.kisa_ad|slice:":2"|upper }}</span>
+        <span><strong>{{ sirket.kisa_ad }}</strong><small>Puantaj Yönetimi</small></span>
+      </a>
+      <button class="nav-toggle" type="button" aria-expanded="false" aria-controls="main-nav">
+        <span class="nav-toggle-icon" aria-hidden="true"></span><span>Menü</span>
+      </button>
+      <nav class="nav-links" id="main-nav" aria-label="Ana menü">
+        <a href="/">Ana Sayfa</a>
+        <div class="nav-item">
+          <button class="nav-dropdown-toggle" type="button" aria-expanded="false">Personel</button>
+          <div class="dropdown-menu"><a href="/personel/">Personel Listesi</a><a href="/personel/yeni/">Yeni Personel</a><a href="/personel/sozlesme-sec/">Personel Evrakları</a><a href="{% url 'istifa_dilekcesi' %}">İstifa Dilekçesi</a><a href="{% url 'devamsizlik_tutanagi_sec' %}">Devamsızlık Tutanağı</a></div>
+        </div>
+        <a href="/puantaj/">Puantaj</a>
+        <div class="nav-item">
+          <button class="nav-dropdown-toggle" type="button" aria-expanded="false">Mesai / Ek Kazanç</button>
+          <div class="dropdown-menu"><a href="/ek-kazanc/mesai/">Mesai Listesi</a><a href="/ek-kazanc/mesai/yeni/">Saatlik Mesai Gir</a><a href="/ek-kazanc/mesai/toplu/">Toplu Saatlik Mesai</a><a href="/ek-kazanc/prim/">Prim</a></div>
+        </div>
+        <div class="nav-item">
+          <button class="nav-dropdown-toggle" type="button" aria-expanded="false">Kesintiler</button>
+          <div class="dropdown-menu"><a href="/kesintiler/avans/">Avans</a><a href="/kesintiler/icra/">İcra</a></div>
+        </div>
+        <a href="/raporlar/">Raporlar</a>
+        <div class="nav-item">
+          <button class="nav-dropdown-toggle" type="button" aria-expanded="false">Ayarlar</button>
+          <div class="dropdown-menu"><a href="/ayarlar/sirket-bilgileri/">Şirket Bilgileri</a><a href="/ayarlar/resmi-tatiller/">Resmi Tatiller</a><a href="/ayarlar/katsayilar/">Katsayılar</a></div>
+        </div>
+        {% if user.is_authenticated %}<form class="nav-logout" method="post" action="/logout/">{% csrf_token %}<button class="nav-session" type="submit">Çıkış</button></form>{% else %}<a class="nav-session" href="/login/">Giriş</a>{% endif %}
+      </nav>
+    </div>
+  </header>
+  <main class="page" id="main-content">
+    {% if messages %}<div class="messages" aria-live="polite">{% for message in messages %}<div class="message {{ message.tags|default:'info' }}">{{ message }}</div>{% endfor %}</div>{% endif %}
+    {% block content %}{% endblock %}
+  </main>
+  <script>
+    (function () {
+      var nav = document.getElementById('main-nav');
+      var navToggle = document.querySelector('.nav-toggle');
+      navToggle.addEventListener('click', function () {
+        var open = nav.classList.toggle('is-open');
+        navToggle.setAttribute('aria-expanded', String(open));
+      });
+      document.querySelectorAll('.nav-dropdown-toggle').forEach(function (button) {
+        button.addEventListener('click', function () {
+          var item = button.closest('.nav-item');
+          var open = !item.classList.contains('is-open');
+          document.querySelectorAll('.nav-item.is-open').forEach(function (other) {
+            other.classList.remove('is-open');
+            other.querySelector('.nav-dropdown-toggle').setAttribute('aria-expanded', 'false');
+          });
+          item.classList.toggle('is-open', open);
+          button.setAttribute('aria-expanded', String(open));
+        });
+      });
+      document.addEventListener('click', function (event) {
+        if (!event.target.closest('.nav-item')) {
+          document.querySelectorAll('.nav-item.is-open').forEach(function (item) {
+            item.classList.remove('is-open');
+            item.querySelector('.nav-dropdown-toggle').setAttribute('aria-expanded', 'false');
+          });
+        }
+      });
+      document.addEventListener('keydown', function (event) {
+        if (event.key === 'Escape') {
+          document.querySelectorAll('.nav-item.is-open').forEach(function (item) {
+            item.classList.remove('is-open');
+            item.querySelector('.nav-dropdown-toggle').setAttribute('aria-expanded', 'false');
+          });
+        }
+      });
+      document.querySelectorAll('table').forEach(function (table) {
+        if (table.closest('.table-scroll, .puantaj-scroll')) return;
+        var wrapper = document.createElement('div');
+        wrapper.className = 'table-scroll';
+        wrapper.setAttribute('tabindex', '0');
+        wrapper.setAttribute('role', 'region');
+        wrapper.setAttribute('aria-label', table.getAttribute('aria-label') || 'Kaydırılabilir tablo');
+        table.parentNode.insertBefore(wrapper, table);
+        wrapper.appendChild(table);
+      });
+    })();
+  </script>
+  {% block extra_js %}{% endblock %}
+</body>
+</html>

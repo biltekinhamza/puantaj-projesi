@@ -1,0 +1,205 @@
+{% extends "base.html" %}
+{% block content %}
+
+<h2>Personel Detaylı Hakediş Raporu</h2>
+
+<form method="get" style="margin-bottom:20px;">
+    <label>Personel:</label>
+    <select name="personel">
+        <option value="">-- Seçiniz --</option>
+        {% for p in personeller %}
+            <option value="{{ p.id }}"
+                {% if secili_personel and p.id == secili_personel.id %}selected{% endif %}>
+                {{ p.ad_soyad }}
+            </option>
+        {% endfor %}
+    </select>
+
+    <label>Başlangıç:</label>
+    <input type="date" name="baslangic" value="{{ baslangic }}">
+
+    <label>Bitiş:</label>
+    <input type="date" name="bitis" value="{{ bitis }}">
+
+    <button type="submit">Getir</button>
+    <a
+        href="/puantaj/raporlar/personel-detay/pdf/?personel={{ secili_personel.id }}&baslangic={{ baslangic }}&bitis={{ bitis }}"
+        class="excel-link"
+        style="margin-left: 8px;"
+        >
+        📄 PDF İndir
+        </a>
+
+</form>
+
+{% if secili_personel %}
+
+<hr>
+
+<h3>Personel Bilgileri</h3>
+<ul>
+    <li><strong>Personel:</strong> {{ secili_personel.ad_soyad }}</li>
+    <li><strong>TC Kimlik No:</strong> {{ secili_personel.tc_kimlik_no|default:"-" }}</li>
+    <li><strong>IBAN:</strong> {{ secili_personel.iban|default:"-" }}</li>
+    <li>
+        <strong>Tarih Aralığı:</strong>
+        {{ baslangic|date:"d.m.Y" }} – {{ bitis|date:"d.m.Y" }}
+    </li>
+</ul>
+
+<hr>
+
+<h3>Puantaj Detayı</h3>
+<table border="1" width="100%" cellpadding="5">
+    <tr>
+        <th>Tarih</th>
+        <th>Kod</th>
+        <th>Açıklama</th>
+    </tr>
+
+    {% for p in puantajlar %}
+    <tr align="center">
+        <td>{{ p.tarih|date:"d.m.Y" }}</td>
+        <td>{{ p.kod }}</td>
+        <td>
+            {% if p.tarih.weekday == 6 %}
+                Hafta Sonu (Pazar)
+            {% elif p.kod == "G" %}
+                Geldi
+            {% elif p.kod == "Y" %}
+                Yarım Gün
+            {% elif p.kod == "İ" %}
+                İzinli
+            {% elif p.kod == "U" %}
+                Ücretsiz İzin
+            {% elif p.kod == "R" %}
+                Raporlu
+            {% elif p.kod == "X" %}
+                Devamsız
+            {% elif p.kod == "T" %}
+                Resmi Tatil
+            {% else %}
+                -
+            {% endif %}
+        </td>
+    </tr>
+    {% empty %}
+    <tr>
+        <td colspan="3" align="center">Puantaj yok</td>
+    </tr>
+    {% endfor %}
+</table>
+
+<p>
+    <strong>Ücretli Gün:</strong> {{ ucretli_gun }} |
+    <strong>Eksik Gün:</strong> {{ eksik_gun }} |
+    <strong>Pazar:</strong> {{ pazar_sayisi }}
+</p>
+
+<hr>
+
+<h3>Mesai Detayı</h3>
+<table border="1" width="100%" cellpadding="5">
+    <tr>
+        <th>Tarih</th>
+        <th>Saat</th>
+        <th>Tutar (TL)</th>
+    </tr>
+    {% for m in mesailer %}
+    <tr align="center">
+        <td>{{ m.tarih|date:"d.m.Y" }}</td>
+        <td>{{ m.saat|default:"-" }}</td>
+        <td>{{ m.tutar|floatformat:2 }}</td>
+    </tr>
+    {% empty %}
+    <tr>
+        <td colspan="3" align="center">Mesai yok</td>
+    </tr>
+    {% endfor %}
+</table>
+
+<hr>
+
+<h3>Prim Detayı</h3>
+<table border="1" width="100%" cellpadding="5">
+    <tr>
+        <th>Tarih</th>
+        <th>Açıklama</th>
+        <th>Tutar (TL)</th>
+    </tr>
+    {% for p in primler %}
+    <tr align="center">
+        <td>{{ p.tarih|date:"d.m.Y" }}</td>
+        <td>{{ p.aciklama }}</td>
+        <td>{{ p.tutar|floatformat:2 }}</td>
+    </tr>
+    {% empty %}
+    <tr>
+        <td colspan="3" align="center">Prim yok</td>
+    </tr>
+    {% endfor %}
+</table>
+
+<hr>
+
+<h3>Kesintiler</h3>
+
+<h4>Avans</h4>
+<ul>
+    {% for a in avanslar %}
+        <li>{{ a.tarih|date:"d.m.Y" }} – {{ a.tutar|floatformat:2 }} TL</li>
+    {% empty %}
+        <li>Avans yok</li>
+    {% endfor %}
+</ul>
+
+<h4>İcra</h4>
+<ul>
+    {% for i in icralar %}
+        <li>{{ i.tarih|date:"d.m.Y" }} – {{ i.tutar|floatformat:2 }} TL</li>
+    {% empty %}
+        <li>İcra yok</li>
+    {% endfor %}
+</ul>
+
+<hr>
+
+<h3>Maaş & Ödeme</h3>
+
+<ul>
+    <li>NET Maaş: {{ ciplak_maas|floatformat:2 }} TL</li>
+    <li>Mesai Toplamı: {{ toplam_mesai_tutar|floatformat:2 }} TL</li>
+    <li>Prim Toplamı: {{ toplam_prim|floatformat:2 }} TL</li>
+</ul>
+
+<hr>
+
+<ul>
+    <li><strong>Hak Edilen Maaş (Toplam Kazanç):</strong>
+        {{ toplam_kazanc|floatformat:2 }} TL
+    </li>
+</ul>
+
+<hr>
+
+<ul>
+    <li>Avans: {{ toplam_avans|floatformat:2 }} TL</li>
+    <li>İcra: {{ toplam_icra|floatformat:2 }} TL</li>
+</ul>
+
+<ul>
+    <li><strong>Kesintiler Toplamı:</strong>
+        {{ toplam_kesinti|floatformat:2 }} TL
+    </li>
+</ul>
+
+<hr>
+
+<ul>
+    <li>Banka: {{ banka|floatformat:2 }} TL</li>
+    <li><strong>Elden:</strong> {{ elden|floatformat:2 }} TL</li>
+</ul>
+
+{% endif %}
+
+{% endblock %}

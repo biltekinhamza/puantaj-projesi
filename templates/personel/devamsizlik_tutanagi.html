@@ -1,0 +1,170 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+<meta charset="UTF-8">
+<title>İŞE İZİNSİZ VE MAZERETSİZ DEVAMSIZLIK TUTANAĞI</title>
+
+<style>
+@page {
+  size: A4;
+  margin: 20mm;
+}
+
+body{
+  font-family:"Times New Roman", serif;
+  font-size:11pt;
+  line-height:1.35;
+  background:#ccc;
+}
+
+.a4{
+  width:210mm;
+  min-height:297mm;
+  margin:20px auto;
+  padding:20mm;
+  background:#fff;
+  box-sizing:border-box;
+  box-shadow:0 0 6px rgba(0,0,0,0.3);
+}
+
+@media print{
+  body{ background:none; }
+  .a4{
+    margin:0;
+    box-shadow:none;
+    page-break-after:always;
+  }
+  .print-btn{
+    display:none;
+  }
+}
+
+.print-btn{
+  position:fixed;
+  top:20px;
+  right:20px;
+  padding:8px 14px;
+  font-size:13px;
+  cursor:pointer;
+  z-index:1000;
+}
+
+h1{
+  text-align:center;
+  font-size:14pt;
+  font-weight:bold;
+  margin-bottom:25px;
+  letter-spacing:0.5px;
+}
+
+.section-title{
+  font-weight:bold;
+  margin:10px 0 4px 0;
+}
+
+.table{
+  width:100%;
+  border-collapse:collapse;
+  margin-bottom:10px;
+}
+
+.table td{
+  padding:2px 0;
+  vertical-align:top;
+}
+
+.label{
+  width:35%;
+  font-weight:bold;
+}
+
+p{
+  margin:6px 0;
+  text-align:justify;
+}
+
+.signature-wrap{
+  margin-top:80px;
+  width:100%;
+  overflow:hidden;
+  page-break-inside:avoid;
+}
+
+.sig-col{
+  width:33%;
+  float:left;
+  text-align:center;
+}
+
+.sig-col .box{
+  margin-top:30px;
+}
+</style>
+</head>
+
+<body>
+
+<button class="print-btn" onclick="window.print()">Yazdır</button>
+
+<div class="a4">
+
+<h1>İŞE İZİNSİZ VE MAZERETSİZ DEVAMSIZLIK TUTANAĞI</h1>
+
+<div class="section-title">İŞVERENİN</div>
+<table class="table">
+  <tr><td class="label">Adı Ünvanı</td><td>: {{ isveren.unvan }}</td></tr>
+  <tr><td class="label">Adresi</td><td>: {{ isveren.adres }}</td></tr>
+  
+</table>
+
+<div class="section-title">PERSONELİN</div>
+<table class="table">
+  <tr><td class="label">Adı Soyadı</td><td>: {{ personel.ad_soyad }}</td></tr>
+  <tr><td class="label">T.C. Kimlik No</td><td>: {{ personel.tc_kimlik_no }}</td></tr>
+</table>
+
+<div class="section-title">DEVAMSIZLIK BİLGİLERİ</div>
+<table class="table">
+  <tr><td class="label">Devamsızlık Tarihi</td><td>: {{ devamsizlik_tarihi|date:"d.m.Y" }}</td></tr>
+  <tr><td class="label">İş Başı Saati</td><td>: {{ isbasi_saati }}</td></tr>
+  <tr><td class="label">Tutanağın Düzenlenme Tarihi</td><td>: {{ tutanak_tarihi|date:"d.m.Y" }}</td></tr>
+  <tr><td class="label">Tutanağın Düzenlenme Saati</td><td>: {{ tutanak_saati }}</td></tr>
+</table>
+
+<p>
+  {{ isveren.unvan }} 'nin çalışma yaptığı "{{ adres }}" adresinde çalışan {{ personel.ad_soyad }},
+  {{ devamsizlik_tarihi|date:"d.m.Y" }} tarihinde işbaşı saati olan {{ isbasi_saati }}’de,
+  herhangi bir mazeret bildirmeksizin ve işverenden izin almaksızın işyerine gelmemiştir.
+  Yapılan yoklama ve fiili işbaşı kontrolünde adı geçen personelin çalışma yerinde bulunmadığı tespit edilmiştir.
+</p>
+
+<p>
+  İşbu tutanak, aşağıda bilgileri bulunan tanıklar huzurunda düzenlenmiş ve müştereken imza altına alınmıştır.
+  
+</p>
+
+<div class="signature-wrap">
+  <div class="sig-col">
+    <strong>TANIK</strong><br>
+    {{ tanik1.ad_soyad }}<br>
+    <div class="box">(İmza)</div>
+  </div>
+
+  <div class="sig-col">
+    <strong>TANIK</strong><br>
+    {{ tanik2.ad_soyad }}<br>
+    <div class="box">(İmza)</div>
+  </div>
+
+  <div class="sig-col">
+    <strong>İŞVEREN YETKİLİSİ</strong><br>
+    {{ isveren_yetkilisi }}<br>
+    <div class="box">(İmza – Kaşe)</div>
+  </div>
+</div>
+
+<div style="clear:both;"></div>
+
+</div>
+</body>
+</html>

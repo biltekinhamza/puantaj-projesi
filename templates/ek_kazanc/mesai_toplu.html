@@ -1,0 +1,13 @@
+{% extends "base.html" %}
+{% block content %}
+<h2>{{ title }}</h2>
+<div class="card">
+  {% if form.errors %}<div class="form-errors" role="alert">Lütfen işaretli alanları kontrol edin.</div>{% endif %}
+  <form method="post">{% csrf_token %}
+    <div class="grid"><div>{{ form.tarih.label_tag }}{{ form.tarih }}{{ form.tarih.errors }}</div><div>{{ form.saat.label_tag }}{{ form.saat }}{{ form.saat.errors }}</div><div>{{ form.aciklama.label_tag }}{{ form.aciklama }}{{ form.aciklama.errors }}</div></div>
+    <h3>Personel Seç</h3>
+    <div class="checkbox-grid">{{ form.personeller }}</div>{{ form.personeller.errors }}
+    <div class="actions"><button type="submit">Seçili Personele Mesai Gir</button><a class="btn light" href="{% url 'ek_kazanc_mesai_liste' %}">Listeye Dön</a></div>
+  </form>
+</div>
+{% endblock %}

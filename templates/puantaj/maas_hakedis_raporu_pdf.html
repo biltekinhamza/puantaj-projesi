@@ -1,0 +1,149 @@
+{% load humanize %}
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+<meta charset="UTF-8">
+<title>Maaş Hakediş Raporu</title>
+
+<style>
+  body {
+    font-family: Arial, sans-serif;
+    font-size: 12px;
+  }
+
+  /* ---------- HEADER (LOGO + BAŞLIK) ---------- */
+  .header {
+    display: flex;
+    align-items: center;
+    margin-bottom: 15px;
+  }
+
+  .logo {
+    width: 110px;     /* LOGO BOYUTU */
+    height: auto;
+  }
+
+  .header-text {
+    flex: 1;
+    text-align: center;
+  }
+
+  .header-text h2 {
+    margin: 0;
+    font-size: 16px;
+  }
+
+  .sub {
+    text-align: center;
+    font-size: 12px;
+    margin-top: 4px;
+  }
+
+  /* ---------- TABLO ---------- */
+  table {
+    width: 100%;
+    border-collapse: collapse;
+  }
+
+  th, td {
+    border: 1px solid #333;
+    padding: 6px;
+    text-align: center;
+  }
+
+  th {
+    background: #eee;
+    font-weight: bold;
+  }
+
+  td.personel {
+    text-align: left;
+  }
+
+  /* ---------- ALT BİLGİLER ---------- */
+  .ozet {
+    margin-top: 15px;
+    font-weight: bold;
+  }
+
+  .imza {
+    margin-top: 40px;
+    display: flex;
+    justify-content: space-between;
+  }
+
+  .imza div {
+    width: 30%;
+    text-align: center;
+  }
+
+  /* ---------- SAYFA NUMARASI ---------- */
+  @page {
+    @bottom-right {
+      content: "Sayfa " counter(page) " / " counter(pages);
+      font-size: 10px;
+    }
+  }
+</style>
+</head>
+
+<body>
+
+<div class="header">
+  <img src="/static/img/logo.png" class="logo">
+
+  <div class="header-text">
+    <h2>{{ sirket.kisa_ad }} Maaş / Hakediş Raporu</h2>
+    <div class="sub">
+      {{ baslangic|date:"d.m.Y" }} – {{ bitis|date:"d.m.Y" }}
+    </div>
+  </div>
+</div>
+
+<table>
+  <thead>
+    <tr>
+      <th>Personel</th>
+      <th>Resmi Tatil Gün</th>
+      <th>Hakediş Gün</th>
+      <th>Brüt Maaş</th>
+      <th>Mesai (TL)</th>
+      <th>Prim</th>
+      <th>Avans</th>
+      <th>İcra</th>
+      <th>Net Ödenecek</th>
+    </tr>
+  </thead>
+  <tbody>
+    {% for r in rows %}
+    <tr>
+      <td class="personel">{{ r.personel.ad_soyad }}</td>
+      <td>{{ r.resmi_tatil_gun }}</td>
+      <td>{{ r.hak_edilen_gun }}</td>
+      <td>{{ r.hak_edilen_maas|floatformat:2|intcomma }}</td>
+      <td>{{ r.mesai_tutar|floatformat:2|intcomma }}</td>
+      <td>{{ r.prim_tutar|floatformat:2|intcomma }}</td>
+      <td>{{ r.avans_tutar|floatformat:2|intcomma }}</td>
+      <td>{{ r.icra_tutar|floatformat:2|intcomma }}</td>
+      <td><strong>{{ r.net_odenecek|floatformat:2|intcomma }}</strong></td>
+    </tr>
+    {% endfor %}
+  </tbody>
+</table>
+
+<div class="ozet">
+  <div>Toplam Brüt: {{ toplam_brut|floatformat:2|intcomma }} TL</div>
+  <div>Toplam Kesinti: {{ toplam_kesinti|floatformat:2|intcomma }} TL</div>
+  <div>Toplam Net: {{ toplam_net|floatformat:2|intcomma }} TL</div>
+</div>
+
+<div class="imza">
+  <div>Hazırlayan<br><br>__________</div>
+  <div>Kontrol Eden<br><br>__________</div>
+  <div>Onaylayan<br><br>__________</div>
+</div>
+
+
+
+</body>
+</html>

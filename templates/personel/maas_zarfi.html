@@ -1,0 +1,99 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+<meta charset="UTF-8">
+<title>Maaş / Evrak Zarfı</title>
+
+<style>
+@page{
+  size: A4;
+  margin: 35mm;
+}
+
+body{
+  font-family: "Times New Roman", serif;
+  font-size: 12pt;
+}
+
+/* ÜST SEÇİM ALANI */
+.secim{
+  margin-bottom: 20px;
+}
+
+/* Yazdır butonu */
+.print-btn{
+  position: fixed;
+  top: 10mm;
+  right: 10mm;
+  padding: 6px 12px;
+  font-size: 13px;
+  cursor: pointer;
+}
+
+@media print{
+  .secim, .print-btn{ display:none; }
+}
+
+/* MERKEZ */
+.zarf-merkez{
+  position: fixed;
+  left: 50%;
+  top: 40%;
+  transform: translate(-50%, -50%);
+}
+
+.zarf-don{
+  text-align: center;
+  transform: rotate(-90deg);
+}
+
+/* LOGO */
+.logo img{
+  height: 40mm;
+  margin-bottom: 20mm;
+}
+
+/* PERSONEL */
+.personel-adi{
+  font-weight: bold;
+  font-size: 25pt;
+}
+</style>
+</head>
+
+<body>
+
+<div class="secim">
+  <form method="get">
+    <label>Personel Seç:</label>
+    <select name="personel" onchange="this.form.submit()">
+      <option value="">— Seçiniz —</option>
+      {% for p in personeller %}
+        <option value="{{ p.id }}"
+          {% if personel and personel.id == p.id %}selected{% endif %}
+        >
+          {{ p.ad_soyad }}
+        </option>
+      {% endfor %}
+    </select>
+  </form>
+</div>
+
+{% if personel %}
+<button class="print-btn" onclick="window.print()">🖨 Yazdır</button>
+
+<div class="zarf-merkez">
+  <div class="zarf-don">
+    <div class="logo">
+      <img src="{{ logo_data_uri|default:logo_url }}" alt="{{ sirket.kisa_ad }} logosu">
+    </div>
+    <div class="personel-adi">
+      {{ personel.ad_soyad }}
+    </div>
+  </div>
+</div>
+{% endif %}
+
+</body>
+</html>

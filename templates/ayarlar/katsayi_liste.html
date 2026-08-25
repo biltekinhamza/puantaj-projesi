@@ -1,0 +1,5 @@
+{% extends "base.html" %}
+{% block content %}
+<h2>Katsayılar</h2>
+<div class="card"><table><thead><tr><th>Kod</th><th>Ad</th><th>Değer</th><th>Açıklama</th><th>İşlem</th></tr></thead><tbody>{% for k in katsayilar %}<tr><td>{{ k.kod }}</td><td>{{ k.ad }}</td><td>{{ k.deger }}</td><td>{{ k.aciklama|default:"" }}</td><td><a class="btn light" href="{% url 'ayarlar_katsayi_duzenle' k.id %}">Düzenle</a></td></tr>{% endfor %}</tbody></table></div>
+{% endblock %}

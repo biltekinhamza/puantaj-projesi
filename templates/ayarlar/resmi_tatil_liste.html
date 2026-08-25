@@ -1,0 +1,12 @@
+{% extends "base.html" %}
+{% block content %}
+<h2>Resmi Tatiller</h2>
+<div class="card">
+  <h3>Yeni Resmi Tatil</h3>
+  <form method="post">{% csrf_token %}<div class="grid">{% for field in form %}<div><label>{{ field.label }}</label>{{ field }}</div>{% endfor %}</div><div style="margin-top:12px;"><button type="submit">Kaydet</button></div></form>
+</div>
+<br>
+<div class="card">
+  <table><thead><tr><th>Tarih</th><th>Ad</th><th>Gün Tipi</th><th>Sabit</th><th>Açıklama</th><th>İşlem</th></tr></thead><tbody>{% for t in tatiller %}<tr><td>{{ t.tarih|date:"d.m.Y" }}</td><td>{{ t.ad }}</td><td>{{ t.get_gun_tipi_display }}</td><td>{% if t.sabit %}Evet{% else %}Hayır{% endif %}</td><td>{{ t.aciklama|default:"" }}</td><td style="display:flex;gap:6px;"><a class="btn light" href="{% url 'ayarlar_resmi_tatil_duzenle' t.id %}">Düzenle</a><form method="post" action="{% url 'ayarlar_resmi_tatil_sil' t.id %}" onsubmit="return confirm('Silinsin mi?');">{% csrf_token %}<button class="danger">Sil</button></form></td></tr>{% empty %}<tr><td colspan="6">Kayıt yok.</td></tr>{% endfor %}</tbody></table>
+</div>
+{% endblock %}

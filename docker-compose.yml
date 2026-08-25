@@ -1,0 +1,51 @@
+name: puantaj
+
+services:
+  web:
+    build: .
+    container_name: puantaj_web
+    restart: unless-stopped
+    ports:
+      - "3008:8000"
+    environment:
+      DJANGO_SECRET_KEY: "change-me-in-production"
+      DJANGO_DEBUG: "1"
+      DJANGO_ALLOWED_HOSTS: "localhost,127.0.0.1,0.0.0.0"
+      POSTGRES_DB: puantaj
+      POSTGRES_USER: puantaj
+      POSTGRES_PASSWORD: puantaj_password
+      POSTGRES_HOST: db
+      POSTGRES_PORT: "5432"
+      DJANGO_SUPERUSER_USERNAME: admin
+      DJANGO_SUPERUSER_PASSWORD: admin12345
+      DJANGO_SUPERUSER_EMAIL: admin@example.com
+      AUTO_IMPORT_PERSONEL: "1"
+    depends_on:
+      - db
+    volumes:
+      - puantaj_media:/app/media
+      - puantaj_static:/app/staticfiles
+    networks:
+      - puantaj_network
+
+  db:
+    image: postgres:16-alpine
+    container_name: puantaj_db
+    restart: unless-stopped
+    environment:
+      POSTGRES_DB: puantaj
+      POSTGRES_USER: puantaj
+      POSTGRES_PASSWORD: puantaj_password
+    volumes:
+      - puantaj_postgres_data:/var/lib/postgresql/data
+    networks:
+      - puantaj_network
+
+volumes:
+  puantaj_postgres_data:
+  puantaj_media:
+  puantaj_static:
+
+networks:
+  puantaj_network:
+    name: puantaj_network

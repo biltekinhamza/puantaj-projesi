@@ -1,0 +1,11 @@
+{% include "personel/belirli_sureli_is_sozlesmesi.html" %}
+
+<div style="text-align:right; margin-top:20px;">
+  <a
+    href="/personel/{{ personel_id }}/sozlesme/pdf/?baslangic={{ sozlesme.baslangic }}&bitis={{ sozlesme.bitis }}&imza={{ sozlesme.imza }}&isin_adi={{ sozlesme.isin_adi }}"
+    target="_blank"
+    style="padding:8px 12px; border:1px solid #000; text-decoration:none;"
+  >
+    PDF Olarak İndir
+  </a>
+</div>

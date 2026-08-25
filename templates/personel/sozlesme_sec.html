@@ -1,0 +1,36 @@
+{% extends "base.html" %}
+{% block content %}
+<h2>Belirli Süreli İş Sözleşmesi</h2>
+
+<form method="post">
+  {% csrf_token %}
+
+  <label>Personel</label><br>
+  <select name="personel_id" required>
+    {% for p in personeller %}
+      <option value="{{ p.id }}">{{ p.ad_soyad }}</option>
+    {% endfor %}
+  </select>
+  <br><br>
+
+  <label>Başlangıç Tarihi</label><br>
+  <input type="date" name="baslangic" required><br><br>
+
+  <label>Bitiş Tarihi</label><br>
+  <input type="date" name="bitis" required><br><br>
+
+  <label>İmza Tarihi</label><br>
+  <input type="date" name="imza" required><br><br>
+
+  <label>İşin Adı</label><br>
+  <input
+    type="text"
+    name="isin_adi"
+    placeholder="Örn: Havalandırma Tesisatı Yapım İşi"
+    style="width: 400px;"
+  >
+  <br><br>
+
+  <button type="submit">Sözleşmeyi Aç</button>
+</form>
+{% endblock %}

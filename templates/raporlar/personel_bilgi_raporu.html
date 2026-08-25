@@ -1,0 +1,148 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+    <meta charset="UTF-8">
+    <title>Personel Bilgi Raporu</title>
+
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background: #f5f6fa;
+            padding: 20px;
+        }
+
+        h2 {
+            margin-bottom: 10px;
+        }
+
+        .actions {
+            margin-bottom: 15px;
+        }
+
+        .actions a,
+        .actions button {
+            display: inline-block;
+            padding: 6px 12px;
+            margin-right: 6px;
+            border-radius: 4px;
+            border: 1px solid #ccc;
+            background: #fff;
+            cursor: pointer;
+            text-decoration: none;
+            color: #000;
+        }
+
+        .actions a.home {
+            background: #2c3e50;
+            color: #fff;
+            border-color: #2c3e50;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            background: #fff;
+        }
+
+        thead {
+            background: #1f2933;
+            color: #fff;
+        }
+
+        th, td {
+            padding: 8px 10px;
+            border: 1px solid #e1e1e1;
+            font-size: 13px;
+        }
+
+        tbody tr:nth-child(even) {
+            background: #f1f5f9;
+        }
+
+        tbody tr:hover {
+            background: #e6f0ff;
+        }
+
+        td.maas {
+            text-align: center;
+            font-weight: bold;
+        }
+
+        .filter {
+            margin-bottom: 10px;
+        }
+    </style>
+</head>
+<body>
+
+<h2>Personel Bilgi Raporu</h2>
+
+<div class="filter">
+    <form method="get">
+        <label>
+            <input type="radio" name="durum" value="tum" {% if durum == "tum" %}checked{% endif %}>
+            Tümü
+        </label>
+        <label>
+            <input type="radio" name="durum" value="aktif" {% if durum == "aktif" %}checked{% endif %}>
+            Aktif
+        </label>
+        <label>
+            <input type="radio" name="durum" value="pasif" {% if durum == "pasif" %}checked{% endif %}>
+            Pasif
+        </label>
+        <button type="submit">Filtrele</button>
+    </form>
+</div>
+
+<div class="actions">
+    <!-- İleride Excel / PDF buraya eklenecek -->
+    <!-- <a href="#">Excel</a>
+    <a href="#">PDF</a> -->
+
+    <a href="{% url 'anasayfa' %}" class="home">Anasayfaya Dön</a>
+    <a href="{% url 'personel_bilgi_excel' %}?durum={{ durum }}">
+    Excel
+</a>
+
+
+</div>
+
+
+<table>
+    <thead>
+        <tr>
+            <th>Ad Soyad</th>
+            <th>TC Kimlik</th>
+            <th>Departman</th>
+            <th>Görev</th>
+            <th>Telefon</th>
+            <th>Adres</th>
+            <th>IBAN</th>
+            <th>Aylık Maaş</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for p in personeller %}
+        <tr>
+            <td>{{ p.ad_soyad }}</td>
+            <td>{{ p.tc_kimlik_no }}</td>
+            <td>{{ p.departman }}</td>
+            <td>{{ p.gorevi|default:"-" }}</td>
+            <td>{{ p.telefon|default:"-" }}</td>
+            <td>{{ p.adres|default:"-" }}</td>
+            <td>{{ p.iban|default:"-" }}</td>
+            <td class="maas">
+                {% if p.aylik_maas %}
+                    {{ p.aylik_maas }}
+                {% else %}
+                    -
+                {% endif %}
+            </td>
+        </tr>
+        {% endfor %}
+    </tbody>
+</table>
+
+</body>
+</html>

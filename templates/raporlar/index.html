@@ -1,0 +1,12 @@
+{% extends "base.html" %}
+{% block title %}Raporlar | {{ sirket.kisa_ad }}{% endblock %}
+{% block content %}
+<div class="page-header"><div><h1>Rapor Merkezi</h1><p class="muted">Operasyon, maaş ve ödeme çıktılarını seçin.</p></div></div>
+<div class="dashboard-grid">
+  <a class="dashboard-link" href="{% url 'toplu_hakedis_raporu' %}"><strong>Toplu Puantaj</strong><span>Hakediş, resmi tatil, hafta sonu ve toplam günler.</span></a>
+  <a class="dashboard-link" href="{% url 'maas_hakedis_raporu' %}"><strong>Maaş / Hakediş</strong><span>Maaş, mesai, prim, kesinti ve net ödeme özeti.</span></a>
+  <a class="dashboard-link" href="{% url 'banka_elden_listesi' %}"><strong>Banka / Elden</strong><span>Ödeme dağılımı ve Excel banka listesi.</span></a>
+  <a class="dashboard-link" href="{% url 'personel_bilgi_excel' %}"><strong>Personel Excel</strong><span>Güncel personel bilgilerini Excel olarak indirin.</span></a>
+  <a class="dashboard-link" href="{% url 'personel_maas_zarfi' %}"><strong>Maaş Zarfı</strong><span>Personel bazında yazdırılabilir maaş zarfı.</span></a>
+</div>
+{% endblock %}
